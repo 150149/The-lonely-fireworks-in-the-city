@@ -1,0 +1,39 @@
+Attribute VB_Name = "MouseLeave"
+Option Explicit
+Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As String) As Long
+Private Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long) As Long
+Private Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+Private Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hwnd As Long, ByVal Msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare Function TrackMouseEvent Lib "user32" (lpEventTrack As TRACKMOUSEEVENTTYPE) As Long
+Public Const GWL_WNDPROC = (-4&)
+Public Const WM_DESTROY = &H2
+Public Const TME_LEAVE = &H2&
+Public Const WM_MOUSELEAVE = &H2A3&
+Public Const WM_KEYUP = &H101
+Dim PrevWndProc&
+Public Type TRACKMOUSEEVENTTYPE
+    cbSize As Long
+    dwFlags As Long
+    hwndTrack As Long
+    dwHoverTime As Long
+End Type
+Private Function SubWndProc(ByVal hwnd As Long, ByVal Msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+    If Msg = WM_DESTROY Then MLTerminate (hwnd)
+    If Msg = WM_MOUSELEAVE Then
+        SubWndProc = CallWindowProc(PrevWndProc, hwnd, WM_KEYUP, -108, 0&)
+    End If
+    SubWndProc = CallWindowProc(PrevWndProc, hwnd, Msg, wParam, lParam)
+End Function
+Public Sub MLInit(hwnd As Long)
+    PrevWndProc = SetWindowLong(hwnd, GWL_WNDPROC, AddressOf SubWndProc)
+End Sub
+Public Sub MLTerminate(hwnd As Long)
+    Call SetWindowLong(hwnd, GWL_WNDPROC, PrevWndProc)
+End Sub
+Public Sub Reload(hwnd As Long)
+    Dim ET As TRACKMOUSEEVENTTYPE
+    ET.cbSize = Len(ET)
+    ET.hwndTrack = hwnd
+    ET.dwFlags = TME_LEAVE
+    TrackMouseEvent ET
+End Sub

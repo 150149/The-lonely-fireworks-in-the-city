@@ -1,0 +1,29 @@
+VERSION 5.00
+Begin VB.UserControl PCheckBox 
+   ClientHeight    =   375
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   1455
+   ScaleHeight     =   375
+   ScaleWidth      =   1455
+   ToolboxBitmap   =   "PCheckBox.ctx":0000
+   Begin ÊÐ¾®ÖÐ¹Â°ÁµÄÑÌ»ð.PButton B2 
+      Height          =   375
+      Left            =   360
+      TabIndex        =   1
+      Top             =   0
+      Width           =   1095
+      _ExtentX        =   1931
+      _ExtentY        =   661
+   End
+   Begin ÊÐ¾®ÖÐ¹Â°ÁµÄÑÌ»ð.PButton B1 
+      Height          =   375
+      Left            =   0
+      TabIndex        =   0
+      Top             =   0
+      Width           =   375
+      _ExtentX        =   661
+      _ExtentY        =   661
+      Text            =   "¡Á"
+   End
+End
